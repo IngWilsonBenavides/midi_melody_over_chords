@@ -1,0 +1,38 @@
+# Bach Minuet 3 - Suzuki Violin Method
+key: G
+time_signature: "3/4"
+tempo_bpm: 66
+ppqn: 480
+program: 30  # Violin
+
+# Melodía específica: 8 compases
+melody:
+  # LÍNEA 1
+  - compas: 1
+    notes: [D, G, A, B, C]
+    rhythm: [q, e, e, e, e]
+    
+  - compas: 2
+    notes: [D, G, G]
+    rhythm: [q, q, q]
+    
+  - compas: 3
+    notes: [E, C, D, E, F]
+    rhythm: [q, e, e, e, e]
+    
+  - compas: 4
+    notes: [G, G, G]
+    rhythm: [q, q, q]
+
+  # LÍNEA 2
+  - compas: 5
+    notes: [B, C, B, A, G]
+    rhythm: [q, e, e, e, e]
+    
+  - compas: 6
+    notes: [F, G, A, B, G]
+    rhythm: [q, e, e, e, e]
+    
+  - compas: 7
+    notes: [A]
+    rhythm: [hd]

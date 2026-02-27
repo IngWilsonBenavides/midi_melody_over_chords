@@ -41,8 +41,10 @@ class MidiExporter:
         events = []
         for measure in phrase.measures:
             for note in measure.notes:
-                events.append((note.start_tick, 1, mido.Message("note_on", note=note.pitch.midi_number, velocity=note.velocity, time=0)))
-                events.append((note.end_tick, 0, mido.Message("note_off", note=note.pitch.midi_number, velocity=0, time=0)))
+                # Only generate MIDI events for audible notes
+                if note.is_audible and note.pitch is not None:
+                    events.append((note.start_tick, 1, mido.Message("note_on", note=note.pitch.midi_number, velocity=note.velocity, time=0)))
+                    events.append((note.end_tick, 0, mido.Message("note_off", note=note.pitch.midi_number, velocity=0, time=0)))
 
         events.sort(key=lambda item: (item[0], item[1]))
         last_time = 0
@@ -52,6 +54,10 @@ class MidiExporter:
             last_time = event_time
 
         track1.append(mido.MetaMessage("end_of_track", time=0))
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        midi.save(str(output_path))
+
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
         midi.save(str(output_path))
