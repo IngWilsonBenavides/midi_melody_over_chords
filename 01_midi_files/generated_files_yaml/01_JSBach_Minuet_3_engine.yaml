@@ -1,0 +1,198 @@
+key: G
+time_signature: 3/4
+tempo_bpm: 120
+ppqn: 480
+program: 30
+melody:
+- compas: 1
+  notes: [D, G, A, B, C]
+  rhythm: [q, e, e, e, e]
+- compas: 2
+  notes: [D, G, G]
+  rhythm: [q, q, q]
+- compas: 3
+  notes: [E, C, D, E, F#]
+  rhythm: [q, e, e, e, e]
+- compas: 4
+  notes: [G, G, G]
+  rhythm: [q, q, q]
+- compas: 5
+  notes: [C, D, C, B, A]
+  rhythm: [q, e, e, e, e]
+- compas: 6
+  notes: [B, C, B, A, G]
+  rhythm: [q, e, e, e, e]
+- compas: 7
+  notes: [F#, G, A, B, G, B]
+  rhythm: [q, e, e, e, e, ticks_60]
+- compas: 8
+  notes: [A]
+  rhythm: [hd]
+- compas: 9
+  notes: [D, G, A, B, C]
+  rhythm: [q, e, e, e, e]
+- compas: 10
+  notes: [D, G, G]
+  rhythm: [q, q, q]
+- compas: 11
+  notes: [E, C, D, E, F#]
+  rhythm: [q, e, e, e, e]
+- compas: 12
+  notes: [G, G, G]
+  rhythm: [q, q, q]
+- compas: 13
+  notes: [C, D, C, B, A]
+  rhythm: [q, e, e, e, e]
+- compas: 14
+  notes: [B, C, B, A, G]
+  rhythm: [q, e, e, e, e]
+- compas: 15
+  notes: [A, B, A, G, F#]
+  rhythm: [q, e, e, e, e]
+- compas: 16
+  notes: [G]
+  rhythm: [hd]
+- compas: 17
+  notes: [D, G, A, B, C]
+  rhythm: [q, e, e, e, e]
+- compas: 18
+  notes: [D, G, G]
+  rhythm: [q, q, q]
+- compas: 19
+  notes: [E, C, D, E, F#]
+  rhythm: [q, e, e, e, e]
+- compas: 20
+  notes: [G, G, G]
+  rhythm: [q, q, q]
+- compas: 21
+  notes: [C, D, C, B, A]
+  rhythm: [q, e, e, e, e]
+- compas: 22
+  notes: [B, C, B, A, G]
+  rhythm: [q, e, e, e, e]
+- compas: 23
+  notes: [F#, G, A, B, G, B]
+  rhythm: [q, e, e, e, e, ticks_60]
+- compas: 24
+  notes: [A]
+  rhythm: [hd]
+- compas: 25
+  notes: [D, G, A, B, C]
+  rhythm: [q, e, e, e, e]
+- compas: 26
+  notes: [D, G, G]
+  rhythm: [q, q, q]
+- compas: 27
+  notes: [E, C, D, E, F#]
+  rhythm: [q, e, e, e, e]
+- compas: 28
+  notes: [G, G, G]
+  rhythm: [q, q, q]
+- compas: 29
+  notes: [C, D, C, B, A]
+  rhythm: [q, e, e, e, e]
+- compas: 30
+  notes: [B, C, B, A, G]
+  rhythm: [q, e, e, e, e]
+- compas: 31
+  notes: [A, B, A, G, F#]
+  rhythm: [q, e, e, e, e]
+- compas: 32
+  notes: [G]
+  rhythm: [hd]
+- compas: 33
+  notes: [B, G, A, B, G]
+  rhythm: [q, e, e, e, e]
+- compas: 34
+  notes: [A, D, E, F#, D]
+  rhythm: [q, e, e, e, e]
+- compas: 35
+  notes: [G, E, F#, G, D]
+  rhythm: [q, e, e, e, e]
+- compas: 36
+  notes: [C#, B, C#, A]
+  rhythm: [q, e, e, q]
+- compas: 37
+  notes: [A, B, C#, D, E, F#]
+  rhythm: [e, e, e, e, e, e]
+- compas: 38
+  notes: [G, F#, E]
+  rhythm: [q, q, q]
+- compas: 39
+  notes: [F#, A, C#]
+  rhythm: [q, q, q]
+- compas: 40
+  notes: [D]
+  rhythm: [hd]
+- compas: 41
+  notes: [D, G, F#, G]
+  rhythm: [q, e, e, q]
+- compas: 42
+  notes: [E, G, F#, G]
+  rhythm: [q, e, e, q]
+- compas: 43
+  notes: [D, C, B]
+  rhythm: [q, q, q]
+- compas: 44
+  notes: [A, G, F#, G, A]
+  rhythm: [e, e, e, e, q]
+- compas: 45
+  notes: [D, E, F#, G, A, B]
+  rhythm: [e, e, e, e, e, e]
+- compas: 46
+  notes: [C, B, A]
+  rhythm: [q, q, q]
+- compas: 47
+  notes: [B, D, G, F#]
+  rhythm: [e, e, q, q]
+- compas: 48
+  notes: [G]
+  rhythm: [hd]
+- compas: 49
+  notes: [B, G, A, B, G]
+  rhythm: [q, e, e, e, e]
+- compas: 50
+  notes: [A, D, E, F#, D]
+  rhythm: [q, e, e, e, e]
+- compas: 51
+  notes: [G, E, F#, G, D]
+  rhythm: [q, e, e, e, e]
+- compas: 52
+  notes: [C#, B, C#, A]
+  rhythm: [q, e, e, q]
+- compas: 53
+  notes: [A, B, C#, D, E, F#]
+  rhythm: [e, e, e, e, e, e]
+- compas: 54
+  notes: [G, F#, E]
+  rhythm: [q, q, q]
+- compas: 55
+  notes: [F#, A, C#]
+  rhythm: [q, q, q]
+- compas: 56
+  notes: [D]
+  rhythm: [hd]
+- compas: 57
+  notes: [D, G, F#, G]
+  rhythm: [q, e, e, q]
+- compas: 58
+  notes: [E, G, F#, G]
+  rhythm: [q, e, e, q]
+- compas: 59
+  notes: [D, C, B]
+  rhythm: [q, q, q]
+- compas: 60
+  notes: [A, G, F#, G, A]
+  rhythm: [e, e, e, e, q]
+- compas: 61
+  notes: [D, E, F#, G, A, B]
+  rhythm: [e, e, e, e, e, e]
+- compas: 62
+  notes: [C, B, A]
+  rhythm: [q, q, q]
+- compas: 63
+  notes: [B, D, G, F#]
+  rhythm: [e, e, q, q]
+- compas: 64
+  notes: [G]
+  rhythm: [hd]
