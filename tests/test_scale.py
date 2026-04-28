@@ -23,3 +23,13 @@ def test_scale_chord_from_degree():
     scale = Scale.from_string("C")
     chord = scale.chord_from_degree(1, ChordQuality.MAJOR)
     assert chord.root.pitch_class == 0
+
+
+def test_scale_mode_suffix_and_pitch_classes():
+    scale = Scale.from_string("Cdor")
+    assert scale.get_scale_pitch_classes() == [0, 2, 3, 5, 7, 9, 10]
+
+
+def test_nearest_scale_pitch():
+    scale = Scale.from_string("C")
+    assert scale.nearest_scale_pitch(61) in (60, 62)

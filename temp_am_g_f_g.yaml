@@ -1,0 +1,10 @@
+key: C
+progression: [vi, V, IV, V]
+groups: 1
+subdivision: quarter
+sequence: "1234"
+range: [41, 81]
+tempo_bpm: 100
+ppqn: 480
+time_signature: "4/4"
+program: 30
