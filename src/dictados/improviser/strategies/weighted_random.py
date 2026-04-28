@@ -84,6 +84,7 @@ class WeightedRandomStrategy(ImproStrategy):
     def _make_rhythm(measure_ticks: int, quarter: int, eighth: int, rng: random.Random) -> list[int]:
         durations: list[int] = []
         ticks_used = 0
+        dot_q = quarter + eighth
         while ticks_used < measure_ticks:
             remaining = measure_ticks - ticks_used
             if remaining <= quarter:
@@ -94,40 +95,11 @@ class WeightedRandomStrategy(ImproStrategy):
                 durations.append(eighth)
                 durations.append(eighth)
                 ticks_used += 2 * eighth
-            elif roll < 0.45 and remaining >= ppqn * 3 // 2:
+            elif roll < 0.50 and remaining >= dot_q:
                 # Dotted quarter
-                dot_q = quarter + eighth
                 durations.append(dot_q)
                 ticks_used += dot_q
             else:
                 durations.append(quarter)
                 ticks_used += quarter
         return durations
-
-
-# Patch the _make_rhythm staticmethod to accept ppqn reference properly.
-def _fixed_make_rhythm(measure_ticks: int, quarter: int, eighth: int, rng: random.Random) -> list[int]:
-    durations: list[int] = []
-    ticks_used = 0
-    dot_q = quarter + eighth
-    while ticks_used < measure_ticks:
-        remaining = measure_ticks - ticks_used
-        if remaining <= quarter:
-            durations.append(remaining)
-            break
-        roll = rng.random()
-        if roll < 0.35 and remaining >= 2 * eighth:
-            durations.append(eighth)
-            durations.append(eighth)
-            ticks_used += 2 * eighth
-        elif roll < 0.50 and remaining >= dot_q:
-            durations.append(dot_q)
-            ticks_used += dot_q
-        else:
-            durations.append(quarter)
-            ticks_used += quarter
-    return durations
-
-
-# Override the static method with the corrected version.
-WeightedRandomStrategy._make_rhythm = staticmethod(_fixed_make_rhythm)  # type: ignore[attr-defined]
