@@ -63,15 +63,14 @@ def parse_note_name(name: str, default_octave: int = 4) -> dict:
         return {"midi_number": None, "note_type": SYMBOLS[name]}
     
     # Parse regular notes
-    upper_name = name.upper()
-    
-    # Extract note name, accidentals, and octave
-    note_char = upper_name[0]
+    # Only uppercase the first character (note letter); preserve the rest so
+    # that lowercase 'b' flats (e.g. 'Db', 'Bb') are not converted to 'B'.
+    note_char = name[0].upper()
     if note_char not in NOTE_NAME_TO_PC:
         raise ValueError(f"Invalid note: {name}")
     
     pitch_class = NOTE_NAME_TO_PC[note_char]
-    remaining = upper_name[1:]
+    remaining = name[1:]
     
     # Parse accidentals
     accidental_sum = 0
@@ -123,16 +122,17 @@ def parse_notes_list(
     
     for note_name in notes:
         note_data = parse_note_name(note_name, current_octave)
-        result.append(note_data)
         
-        # Update octave for next note (if inferring and current is a regular note)
-        if infer_octave and note_data["note_type"] == "normal":
-            # If next note is lower in pitch class, assume next octave up
-            if result and len(result) > 1:
-                prev_midi = result[-2].get("midi_number")
-                curr_midi = note_data["midi_number"]
-                if prev_midi and curr_midi and curr_midi < prev_midi:
-                    current_octave += 1
+        # If inferring octave and the parsed note falls below the previous note,
+        # bump the octave and re-parse so the *current* note uses the right octave.
+        if infer_octave and note_data["note_type"] == "normal" and result:
+            prev_midi = result[-1].get("midi_number")
+            curr_midi = note_data["midi_number"]
+            if prev_midi is not None and curr_midi is not None and curr_midi < prev_midi:
+                current_octave += 1
+                note_data = parse_note_name(note_name, current_octave)
+        
+        result.append(note_data)
     
     return result
 

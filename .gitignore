@@ -45,10 +45,43 @@ htmlcov/
 # Generated MIDI files
 01_midi_files/*.mid
 
+# Dataset raw sources (large / external — download separately)
+data/raw/**/*.mid
+data/raw/**/*.midi
+
+# Generated dataset artefacts (reproduce via build script)
+data/processed/*.jsonl
+data/splits/*.jsonl
+reports/dataset_summary.md
+
 # Configuration overrides
 config.local.yaml
 .env
 
+# ML model artifacts
+models/*.pkl
+
+# Generated demo outputs (reproducible via make demo)
+outputs/*.mid
+
 # OS
 Thumbs.db
 .DS_Store
+
+# ── Web app (webapp/) ────────────────────────────────────────────────────────
+# Ignore actual MIDI files dropped into the curator media folders (large/personal)
+webapp/media/midis/**/*.mid
+webapp/media/midis/**/*.midi
+# Keep placeholder directories
+!webapp/media/midis/dataset/.gitkeep
+!webapp/media/midis/generated/.gitkeep
+# Track the built-in sample melodies (small, melody-only, for quick testing)
+!webapp/media/midis/dataset/*.mid
+!webapp/media/midis/generated/*.mid
+# Runtime / build artifacts
+webapp/backend/staticfiles/
+webapp/frontend/dist/
+webapp/frontend/node_modules/
+# Local env overrides (copy from .env.example)
+webapp/.env
+

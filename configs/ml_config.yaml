@@ -1,0 +1,26 @@
+# ── ML Improviser Configuration ──────────────────────────────────────────────
+
+# Dataset splits (paths relative to repo root)
+train_split: data/splits/train.jsonl
+val_split:   data/splits/val.jsonl
+
+# Model persistence
+model_path: models/ngram.pkl
+
+# Training hyperparameters
+order: 3       # n-gram order (context window: prev_interval + prev_dur)
+alpha: 0.5     # add-alpha (Laplace) smoothing
+seed:  42      # random seed for reproducibility
+
+# Inference parameters
+progression: "Am Am Em Em Am Am Dm Dm"
+tempo:       100.0     # BPM (parametrisable; valid range 90–110)
+temperature: 1.0       # sampling temperature (>1 = more random, <1 = greedier)
+swing:       false     # set to true for swing 8ths
+
+# Style conditioning (slot prepared; currently neutral = no conditioning)
+style_tag: neutral
+
+# Output paths
+out_dir:     outputs
+report_path: reports/demo_summary.md
