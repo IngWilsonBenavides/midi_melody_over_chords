@@ -75,6 +75,9 @@ webapp/media/midis/**/*.midi
 # Keep placeholder directories
 !webapp/media/midis/dataset/.gitkeep
 !webapp/media/midis/generated/.gitkeep
+# Track the built-in sample melodies (small, melody-only, for quick testing)
+!webapp/media/midis/dataset/*.mid
+!webapp/media/midis/generated/*.mid
 # Runtime / build artifacts
 webapp/backend/staticfiles/
 webapp/frontend/dist/
