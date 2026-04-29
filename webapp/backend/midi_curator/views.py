@@ -87,8 +87,9 @@ class MidiItemViewSet(viewsets.ReadOnlyModelViewSet):
             item.save(update_fields=["file_missing"])
             raise Http404("MIDI file not found on disk.")
 
+        # FileResponse takes ownership of the file handle and closes it after delivery.
         response = FileResponse(
-            open(file_path, "rb"),
+            open(file_path, "rb"),  # noqa: WPS515 — FileResponse closes the handle
             content_type="audio/midi",
         )
         response["Content-Disposition"] = f'inline; filename="{item.filename}"'
