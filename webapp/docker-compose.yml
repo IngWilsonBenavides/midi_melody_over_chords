@@ -1,5 +1,3 @@
-version: "3.9"
-
 # ─────────────────────────────────────────────────────────────────────────────
 # MIDI Melody Curator — Docker Compose
 #
@@ -7,17 +5,18 @@ version: "3.9"
 #   cp .env.example .env   # edit passwords as needed
 #   docker compose up -d
 #
-# Services:
-#   db        – PostgreSQL 15
+# Services / container names:
+#   database  – PostgreSQL 15
 #   pgadmin   – pgAdmin 4  (http://localhost:5050)
-#   backend   – Django + DRF (http://localhost:8000)
-#   frontend  – React/Vite dev server (http://localhost:5173)
+#   back      – Django + DRF (http://localhost:8000)
+#   front     – React/Vite dev server (http://localhost:5173)
 # ─────────────────────────────────────────────────────────────────────────────
 
 services:
 
   # ── PostgreSQL ──────────────────────────────────────────────────────────────
   db:
+    container_name: database
     image: postgres:15-alpine
     restart: unless-stopped
     environment:
@@ -34,6 +33,7 @@ services:
 
   # ── pgAdmin 4 ───────────────────────────────────────────────────────────────
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4:latest
     restart: unless-stopped
     depends_on:
@@ -49,6 +49,7 @@ services:
 
   # ── Django backend ──────────────────────────────────────────────────────────
   backend:
+    container_name: back
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -71,11 +72,12 @@ services:
     volumes:
       - ./backend:/app              # live-reload in dev
       - ./media/midis:/media/midis  # bind-mount: drop .mid files here on host
-    entrypoint: ["sh", "/app/entrypoint.sh"]
+    entrypoint: ["sh", "-c", "tr -d '\\r' < /app/entrypoint.sh > /tmp/entrypoint.sh && exec sh /tmp/entrypoint.sh \"$@\"", "sh"]
     command: python manage.py runserver 0.0.0.0:8000
 
   # ── React / Vite frontend ───────────────────────────────────────────────────
   frontend:
+    container_name: front
     build:
       context: ./frontend
       dockerfile: Dockerfile
