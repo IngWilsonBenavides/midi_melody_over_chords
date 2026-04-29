@@ -8,11 +8,14 @@ Provides:
 """
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Optional
 
 from dictados.domain.chord import Chord, ChordQuality
 from dictados.domain.pitch import Pitch
+
+_log = logging.getLogger(__name__)
 
 # ─── Melodic range ────────────────────────────────────────────────────────────
 # Standard MIDI: C3 = 48, C4 (middle C) = 60, C5 = 72, C6 = 84
@@ -62,6 +65,11 @@ _QUALITY_TO_SCALE: dict[ChordQuality, str] = {
 def parse_chord_name(name: str) -> Chord:
     """Parse a chord name like 'Am', 'G7', 'Cmaj7', 'Dm7' into a Chord object.
 
+    Slash chords like ``Am/E`` are treated as the chord above the slash
+    (the bass note is ignored).  Unsupported extensions such as ``aug``,
+    ``sus2``, ``sus4``, and ``dim7`` are logged as warnings and mapped to
+    the nearest supported quality.
+
     The root Pitch is set to the lowest MIDI number with that pitch class
     inside [60, 71] (i.e. within octave 4) for reference purposes only;
     the actual MIDI octave is resolved when building voicings.
@@ -69,6 +77,15 @@ def parse_chord_name(name: str) -> Chord:
     raw = name.strip()
     if not raw:
         raise ValueError("Empty chord name")
+
+    # ── Strip slash-chord bass note (e.g. "Am/E" → "Am") ─────────────────────
+    if "/" in raw:
+        chord_part, bass_part = raw.split("/", 1)
+        _log.warning(
+            "Slash chord %r: bass note %r ignored — using chord %r",
+            raw, bass_part, chord_part,
+        )
+        raw = chord_part.strip()
 
     # Determine root pitch class.
     if len(raw) >= 2 and raw[1] in ("#", "b"):
@@ -92,14 +109,35 @@ def parse_chord_name(name: str) -> Chord:
         quality = ChordQuality.MIN7
     elif suffix_lower in ("7",):
         quality = ChordQuality.DOM7
-    elif suffix_lower in ("dim", "°", "o"):
+    elif suffix_lower in ("dim", "°", "o", "dim7"):
         quality = ChordQuality.DIMINISHED
-    elif suffix_lower in ("m", "min", "-"):
+    elif suffix_lower in ("m", "min", "-", "m7b5"):
         quality = ChordQuality.MINOR
+        if suffix_lower == "m7b5":
+            _log.warning(
+                "Chord suffix %r (half-diminished) treated as MINOR — "
+                "full m7b5 support is pending.",
+                suffix,
+            )
     elif suffix_lower in ("", "maj", "M"):
         quality = ChordQuality.MAJOR
+    elif suffix_lower in ("aug", "+"):
+        _log.warning(
+            "Augmented chord %r treated as MAJOR — aug support is pending.",
+            raw,
+        )
+        quality = ChordQuality.MAJOR
+    elif suffix_lower in ("sus2", "sus4", "sus"):
+        _log.warning(
+            "Suspended chord %r treated as MAJOR — sus support is pending.",
+            raw,
+        )
+        quality = ChordQuality.MAJOR
     else:
-        # Fallback: treat unknown suffixes as major.
+        _log.warning(
+            "Unrecognised chord suffix %r in %r — defaulting to MAJOR.",
+            suffix, raw,
+        )
         quality = ChordQuality.MAJOR
 
     return Chord(root=make_pitch(root_midi), quality=quality)

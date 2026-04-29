@@ -12,11 +12,14 @@ and an optional style hint.
 """
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass, field
 
 from dictados.domain.chord import Chord
 from dictados.improviser.theory import parse_chord_name
+
+_log = logging.getLogger(__name__)
 
 
 # ─── Result dataclass ─────────────────────────────────────────────────────────
@@ -109,8 +112,8 @@ def parse_text(text: str) -> ParsedProgression:
     for token in valid_tokens:
         try:
             chords.append(parse_chord_name(token))
-        except ValueError:
-            pass  # skip unrecognised tokens
+        except ValueError as exc:
+            _log.warning("Skipping unrecognised chord token %r: %s", token, exc)
 
     if not chords:
         raise ValueError(f"Could not parse any chords from: {text!r}")

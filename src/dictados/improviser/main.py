@@ -16,8 +16,8 @@ Usage
 
 Optional flags
 --------------
---tempo   INT     Override tempo in BPM (default: 120 or from text/MIDI).
---rounds  INT     Number of times to repeat the chord progression (default: 1 or from text).
+--tempo   INT     Override tempo in BPM (1–300; default: 120 or from text/MIDI).
+--rounds  INT     Number of times to repeat the chord progression (≥1; default: 1 or from text).
 --seed    INT     Random seed for reproducible output (default: random).
 --output  PATH    Output MIDI file path (default: auto-generated in 01_midi_files/output/).
 --style   STRING  Style hint: straight, swing, latin, blues (default: straight).
@@ -25,6 +25,7 @@ Optional flags
 from __future__ import annotations
 
 import argparse
+import logging
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -38,6 +39,14 @@ from dictados.improviser.midi_chord_reader import read_chords_from_midi
 from dictados.improviser.text_parser import ParsedProgression, parse_text
 from dictados.improviser.theory import chord_label
 from dictados.midi.exporter import MidiExporter
+
+_log = logging.getLogger(__name__)
+
+# ─── Input validation constants ───────────────────────────────────────────────
+# mido.bpm2tempo(bpm) = 60_000_000 / bpm; MIDI tempo is a 24-bit value (max 16_777_215).
+# That means BPM < 4 would overflow.  We use 20 as the practical minimum (very slow).
+_TEMPO_MIN = 20
+_TEMPO_MAX = 300
 
 
 # ─── Output path helper ───────────────────────────────────────────────────────
@@ -138,11 +147,11 @@ def _interactive() -> tuple[list[Chord], int, int, Optional[int]]:
         print("  ⚠️  Please enter a positive integer.\n")
 
     while True:
-        bpm_raw = input("Tempo in BPM? [120]: ").strip() or "120"
-        if bpm_raw.isdigit() and 40 <= int(bpm_raw) <= 300:
+        bpm_raw = input(f"Tempo in BPM? [120]: ").strip() or "120"
+        if bpm_raw.isdigit() and _TEMPO_MIN <= int(bpm_raw) <= _TEMPO_MAX:
             tempo_bpm = int(bpm_raw)
             break
-        print("  ⚠️  Please enter a value between 40 and 300.\n")
+        print(f"  ⚠️  Please enter a value between {_TEMPO_MIN} and {_TEMPO_MAX}.\n")
 
     seed_raw = input("Random seed for reproducibility? (leave blank for random): ").strip()
     seed = int(seed_raw) if seed_raw.isdigit() else None
@@ -171,8 +180,10 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="FILE",
         help="Path to an input MIDI file (inside the 'input/' folder or elsewhere).",
     )
-    parser.add_argument("--tempo", type=int, default=None, metavar="BPM", help="Override tempo.")
-    parser.add_argument("--rounds", type=int, default=None, metavar="N", help="Repetitions of the progression.")
+    parser.add_argument("--tempo", type=int, default=None, metavar="BPM",
+                        help=f"Override tempo ({_TEMPO_MIN}–{_TEMPO_MAX} BPM).")
+    parser.add_argument("--rounds", type=int, default=None, metavar="N",
+                        help="Repetitions of the progression (≥1).")
     parser.add_argument("--seed", type=int, default=None, metavar="INT", help="Random seed.")
     parser.add_argument("--output", "-o", metavar="PATH", help="Output MIDI path.")
     parser.add_argument("--style", default=None, metavar="STYLE", help="Style hint (swing, latin, …).")
@@ -182,6 +193,13 @@ def _build_parser() -> argparse.ArgumentParser:
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main(argv: list[str] | None = None) -> None:
+    # Configure logging so that warnings from sub-modules are visible on stderr.
+    logging.basicConfig(
+        level=logging.WARNING,
+        format="%(levelname)s: %(message)s",
+        stream=sys.stderr,
+    )
+
     parser = _build_parser()
     args = parser.parse_args(argv)
 
@@ -231,13 +249,29 @@ def main(argv: list[str] | None = None) -> None:
         chords, tempo_bpm, rounds, args.seed = _interactive()
 
     # ── Apply overrides ───────────────────────────────────────────────────────
-    if args.tempo:
+    if args.tempo is not None:
+        if not (_TEMPO_MIN <= args.tempo <= _TEMPO_MAX):
+            parser.error(
+                f"--tempo {args.tempo} is out of range: "
+                f"must be between {_TEMPO_MIN} and {_TEMPO_MAX} BPM."
+            )
         tempo_bpm = args.tempo
-    if args.rounds:
+    if args.rounds is not None:
+        if args.rounds < 1:
+            parser.error(f"--rounds {args.rounds} is invalid: must be ≥ 1.")
         rounds = args.rounds
 
     all_chords = chords * rounds
     output_path = Path(args.output) if args.output else None
+
+    # ── Validate final tempo (might come from text or MIDI source) ────────────
+    if not (_TEMPO_MIN <= tempo_bpm <= _TEMPO_MAX):
+        _log.warning(
+            "Tempo %d BPM is outside the supported range [%d, %d]; "
+            "clamping to nearest boundary.",
+            tempo_bpm, _TEMPO_MIN, _TEMPO_MAX,
+        )
+        tempo_bpm = max(_TEMPO_MIN, min(_TEMPO_MAX, tempo_bpm))
 
     # ── Summary ───────────────────────────────────────────────────────────────
     chord_names = " | ".join(chord_label(c) for c in chords)

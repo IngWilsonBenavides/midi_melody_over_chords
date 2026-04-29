@@ -93,7 +93,13 @@ def read_chords_from_midi(midi_path: Path) -> ChordReaderResult:
     if not midi_path.exists():
         raise FileNotFoundError(f"MIDI file not found: {midi_path}")
 
-    midi = mido.MidiFile(str(midi_path))
+    try:
+        midi = mido.MidiFile(str(midi_path))
+    except Exception as exc:
+        raise ValueError(
+            f"Could not read MIDI file '{midi_path}': {exc}\n"
+            "Make sure the file is a valid Standard MIDI File (.mid / .midi)."
+        ) from exc
     ppqn = midi.ticks_per_beat
 
     # ── Parse all note events ─────────────────────────────────────────────────

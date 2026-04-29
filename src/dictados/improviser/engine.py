@@ -70,8 +70,6 @@ class ImproEngine:
         context: list[int] = []
         result: list[list[tuple[int, int]]] = []
 
-        strategies, weights = zip(*_STRATEGY_POOL)
-
         for i, chord in enumerate(chords):
             # Call-and-response: even measures are "call" (active), odd are "response" (settling).
             is_call = (i % 2 == 0)
