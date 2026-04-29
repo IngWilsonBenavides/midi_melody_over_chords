@@ -122,16 +122,17 @@ def parse_notes_list(
     
     for note_name in notes:
         note_data = parse_note_name(note_name, current_octave)
-        result.append(note_data)
         
-        # Update octave for next note (if inferring and current is a regular note)
-        if infer_octave and note_data["note_type"] == "normal":
-            # If next note is lower in pitch class, assume next octave up
-            if result and len(result) > 1:
-                prev_midi = result[-2].get("midi_number")
-                curr_midi = note_data["midi_number"]
-                if prev_midi and curr_midi and curr_midi < prev_midi:
-                    current_octave += 1
+        # If inferring octave and the parsed note falls below the previous note,
+        # bump the octave and re-parse so the *current* note uses the right octave.
+        if infer_octave and note_data["note_type"] == "normal" and result:
+            prev_midi = result[-1].get("midi_number")
+            curr_midi = note_data["midi_number"]
+            if prev_midi is not None and curr_midi is not None and curr_midi < prev_midi:
+                current_octave += 1
+                note_data = parse_note_name(note_name, current_octave)
+        
+        result.append(note_data)
     
     return result
 
