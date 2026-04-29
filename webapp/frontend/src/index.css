@@ -41,10 +41,35 @@ body {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  padding: 12px 0;
+  padding: 8px 0;
   overflow-y: auto;
   flex-shrink: 0;
+  transition: width .2s ease;
+  z-index: 100;
 }
+
+.sidebar--collapsed {
+  width: 52px;
+}
+
+/* Toggle button inside sidebar */
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 4px auto 8px;
+  border: none;
+  background: var(--bg3);
+  color: var(--text2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.sidebar-toggle:hover { background: var(--accent); color: #fff; }
 
 .sidebar-title {
   padding: 4px 16px 12px;
@@ -59,7 +84,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 9px 12px;
   cursor: pointer;
   border-radius: 0;
   color: var(--text2);
@@ -69,12 +94,63 @@ body {
   width: 100%;
   text-align: left;
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .sidebar-item:hover { background: var(--bg3); color: var(--text); }
 .sidebar-item.active { background: var(--accent); color: #fff; }
-.sidebar-item .icon { font-size: 16px; }
+.sidebar-item .icon { font-size: 17px; flex-shrink: 0; }
+
+/* When collapsed, center the icon */
+.sidebar--collapsed .sidebar-item {
+  justify-content: center;
+  padding: 10px 0;
+}
 
 .sidebar-section { margin-top: 12px; }
+
+/* Mobile overlay backdrop */
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ── Mobile ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 200px;
+    z-index: 200;
+    box-shadow: 4px 0 24px rgba(0,0,0,.5);
+  }
+
+  .sidebar--collapsed {
+    width: 52px;
+    box-shadow: none;
+  }
+
+  /* Show backdrop only on mobile when sidebar is open */
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 199;
+  }
+
+  /* Push main panel when sidebar is collapsed on mobile */
+  .app-layout {
+    padding-left: 0;
+  }
+
+  /* Reserve space on the left for the collapsed icon bar */
+  .app-layout > .main-panel {
+    margin-left: 52px;
+    transition: margin-left .2s ease;
+  }
+}
 
 /* ── Main panel ──────────────────────────────────────────────────────────── */
 .main-panel {

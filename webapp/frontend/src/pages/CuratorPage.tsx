@@ -15,6 +15,7 @@ const DEFAULT_FILTERS: MidiFilters = {
 export default function CuratorPage() {
   const [filters, setFilters] = useState<MidiFilters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<MidiItem | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.innerWidth < 640);
 
   const { data, isLoading, error } = useMidis(filters);
 
@@ -29,6 +30,8 @@ export default function CuratorPage() {
   const handleSidebarChange = (sourceType: MidiFilters["source_type"]) => {
     setFilters({ source_type: sourceType, page: 1 });
     setSelected(null);
+    // On mobile, auto-collapse after selection
+    if (window.innerWidth < 640) setSidebarCollapsed(true);
   };
 
   const handleFavoriteToggle = async (item: MidiItem) => {
@@ -45,9 +48,20 @@ export default function CuratorPage() {
 
   return (
     <div className="app-layout">
+      {/* Mobile overlay backdrop */}
+      {!sidebarCollapsed && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setSidebarCollapsed(true)}
+          aria-hidden="true"
+        />
+      )}
+
       <Sidebar
         activeFilter={filters.source_type}
         onChange={handleSidebarChange}
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed((v) => !v)}
       />
 
       <div className="main-panel">
