@@ -111,14 +111,15 @@ def parse_chord_name(name: str) -> Chord:
         quality = ChordQuality.DOM7
     elif suffix_lower in ("dim", "°", "o", "dim7"):
         quality = ChordQuality.DIMINISHED
-    elif suffix_lower in ("m", "min", "-", "m7b5"):
+    elif suffix_lower == "m7b5":
+        _log.warning(
+            "Chord suffix %r (half-diminished) treated as MINOR — "
+            "full m7b5 support is pending.",
+            suffix,
+        )
         quality = ChordQuality.MINOR
-        if suffix_lower == "m7b5":
-            _log.warning(
-                "Chord suffix %r (half-diminished) treated as MINOR — "
-                "full m7b5 support is pending.",
-                suffix,
-            )
+    elif suffix_lower in ("m", "min", "-"):
+        quality = ChordQuality.MINOR
     elif suffix_lower in ("", "maj", "M"):
         quality = ChordQuality.MAJOR
     elif suffix_lower in ("aug", "+"):
