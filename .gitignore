@@ -67,3 +67,18 @@ outputs/*.mid
 # OS
 Thumbs.db
 .DS_Store
+
+# ── Web app (webapp/) ────────────────────────────────────────────────────────
+# Ignore actual MIDI files dropped into the curator media folders (large/personal)
+webapp/media/midis/**/*.mid
+webapp/media/midis/**/*.midi
+# Keep placeholder directories
+!webapp/media/midis/dataset/.gitkeep
+!webapp/media/midis/generated/.gitkeep
+# Runtime / build artifacts
+webapp/backend/staticfiles/
+webapp/frontend/dist/
+webapp/frontend/node_modules/
+# Local env overrides (copy from .env.example)
+webapp/.env
+
