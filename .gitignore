@@ -58,6 +58,12 @@ reports/dataset_summary.md
 config.local.yaml
 .env
 
+# ML model artifacts
+models/*.pkl
+
+# Generated demo outputs (reproducible via make demo)
+outputs/*.mid
+
 # OS
 Thumbs.db
 .DS_Store
