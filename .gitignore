@@ -45,6 +45,15 @@ htmlcov/
 # Generated MIDI files
 01_midi_files/*.mid
 
+# Dataset raw sources (large / external — download separately)
+data/raw/**/*.mid
+data/raw/**/*.midi
+
+# Generated dataset artefacts (reproduce via build script)
+data/processed/*.jsonl
+data/splits/*.jsonl
+reports/dataset_summary.md
+
 # Configuration overrides
 config.local.yaml
 .env
