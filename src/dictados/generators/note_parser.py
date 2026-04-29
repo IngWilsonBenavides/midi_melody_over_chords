@@ -63,15 +63,14 @@ def parse_note_name(name: str, default_octave: int = 4) -> dict:
         return {"midi_number": None, "note_type": SYMBOLS[name]}
     
     # Parse regular notes
-    upper_name = name.upper()
-    
-    # Extract note name, accidentals, and octave
-    note_char = upper_name[0]
+    # Only uppercase the first character (note letter); preserve the rest so
+    # that lowercase 'b' flats (e.g. 'Db', 'Bb') are not converted to 'B'.
+    note_char = name[0].upper()
     if note_char not in NOTE_NAME_TO_PC:
         raise ValueError(f"Invalid note: {name}")
     
     pitch_class = NOTE_NAME_TO_PC[note_char]
-    remaining = upper_name[1:]
+    remaining = name[1:]
     
     # Parse accidentals
     accidental_sum = 0
