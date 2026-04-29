@@ -71,7 +71,7 @@ services:
     volumes:
       - ./backend:/app              # live-reload in dev
       - ./media/midis:/media/midis  # bind-mount: drop .mid files here on host
-    entrypoint: ["/app/entrypoint.sh"]
+    entrypoint: ["sh", "/app/entrypoint.sh"]
     command: python manage.py runserver 0.0.0.0:8000
 
   # ── React / Vite frontend ───────────────────────────────────────────────────
