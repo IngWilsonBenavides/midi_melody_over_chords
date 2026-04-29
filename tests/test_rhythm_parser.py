@@ -46,10 +46,10 @@ class TestParseRhythmList:
         assert result == [480]
 
     def test_bach_measure_1(self):
-        # [q, e, e, e, e] should total 1920 ticks (4 beats)
+        # [q, e, e, e, e] totals 3 beats (1 + 4×0.5 = 3), fitting a 3/4 measure
         result = parse_rhythm_list(["q", "e", "e", "e", "e"], ppqn=480)
         assert result == [480, 240, 240, 240, 240]
-        assert sum(result) == 1920
+        assert sum(result) == 1440
 
     def test_bach_measure_2(self):
         # [q, q, q] should total 1440 ticks (3 beats in 3/4)
@@ -76,21 +76,21 @@ class TestValidateRhythmForMeasure:
         )
 
     def test_bach_line_1_measure_1(self):
-        # [q, e, e, e, e] in 3/4 should be 4 beats (invalid)
+        # [q, e, e, e, e] = 3 beats, which is valid in 3/4
+        assert validate_rhythm_for_measure(
+            ["q", "e", "e", "e", "e"],
+            "3/4",
+            ppqn=480
+        )
+
+    def test_bach_line_1_measure_1_in_4_4(self):
+        # [q, e, e, e, e] = 3 beats, which is invalid in 4/4 (needs 4 beats)
         with pytest.raises(ValueError):
             validate_rhythm_for_measure(
                 ["q", "e", "e", "e", "e"],
-                "3/4",
+                "4/4",
                 ppqn=480
             )
-
-    def test_bach_line_1_measure_1_in_4_4(self):
-        # [q, e, e, e, e] in 4/4 should be valid (4 beats)
-        assert validate_rhythm_for_measure(
-            ["q", "e", "e", "e", "e"],
-            "4/4",
-            ppqn=480
-        )
 
     def test_invalid_measure_raises(self):
         # 2 quarter notes in 4/4 = invalid
