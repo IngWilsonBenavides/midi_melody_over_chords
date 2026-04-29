@@ -256,6 +256,7 @@ def _infer_style(path: Path) -> str | None:
         "jazz", "blues", "rock", "pop", "classical", "fusion",
         "reggae", "latin", "folk", "country", "funk", "soul",
         "metal", "electronic", "r&b", "rb",
+        "minor", "major", "dominant",
     }
     parent = path.parent.name.lower()
     if parent in known_styles:

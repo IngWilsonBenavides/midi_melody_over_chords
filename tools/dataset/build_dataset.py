@@ -35,6 +35,7 @@ def _iter_midi_files(input_dir: Path) -> list[tuple[Path, str | None]]:
         "jazz", "blues", "rock", "pop", "classical", "fusion",
         "reggae", "latin", "folk", "country", "funk", "soul",
         "metal", "electronic", "r&b", "rb",
+        "minor", "major", "dominant",
     }
     results: list[tuple[Path, str | None]] = []
     for midi_path in sorted(input_dir.rglob("*.mid")):
